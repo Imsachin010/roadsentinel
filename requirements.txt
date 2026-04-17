@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+osmnx
+networkx
+numpy
+pandas
+shapely
+geopy
+scikit-learn
+python-multipart
