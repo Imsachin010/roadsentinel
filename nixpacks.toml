@@ -1,9 +1,15 @@
 [phases.setup]
-nixPkgs = ["python311", "python311Packages.pip", "nodejs", "gcc"]
+nixPkgs = ["python311", "nodejs", "gcc"]
 
 [phases.install]
 cmds = [
-  "python3 -m pip install -r requirements.txt || python3 -m ensurepip",
-  "python3 -m pip install -r requirements.txt",
+  "python3 -m venv /opt/venv",
+  "/opt/venv/bin/pip install -r requirements.txt",
   "cd server && npm install"
 ]
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = "/opt/venv/bin/python3 src/detection/main.py"
