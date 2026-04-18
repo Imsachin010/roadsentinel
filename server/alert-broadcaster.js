@@ -54,10 +54,20 @@ app.post("/telemetry", (req, res) => {
   res.send({ status: "sent" });
 });
 
+let currentScenario = "normal";
+
+app.get("/scenario", (req, res) => {
+  res.json({ scenario: currentScenario });
+});
+
 // Proxy scenario switch to Python engine (avoids browser CORS on port 5001)
 app.post("/scenario", async (req, res) => {
   const { scenario } = req.body;
+  currentScenario = scenario;
   console.log(`🎬 Scenario switch requested: ${scenario}`);
+  // Always broadcast to UI clients immediately
+  io.emit("scenario_changed", { scenario });
+  // Best-effort relay to engine
   try {
     const response = await fetch(`${ENGINE_URL}/scenario`, {
       method: "POST",
@@ -65,12 +75,10 @@ app.post("/scenario", async (req, res) => {
       body: JSON.stringify({ scenario })
     });
     const data = await response.json();
-    // Broadcast scenario change to all dashboard clients
-    io.emit("scenario_changed", { scenario });
     res.json(data);
   } catch (e) {
-    console.error("Failed to relay scenario to engine:", e.message);
-    res.status(500).json({ error: "Could not reach detection engine" });
+    console.error("Failed to relay scenario to engine (non-fatal):", e.message);
+    res.json({ status: "broadcasted", engine: "unreachable" });
   }
 });
 
