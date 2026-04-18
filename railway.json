@@ -4,6 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
+    "startCommand": "python src/detection/main.py",
     "numReplicas": 1,
     "sleepApplication": false
   }
