@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["python3", "python312Packages.pip", "nodejs", "gcc"]
+nixPkgs = ["python311Full", "nodejs", "gcc"]
 
 [phases.install]
-cmds = ["python -m pip install -r requirements.txt", "cd server && npm install"]
+cmds = ["python3 -m pip install -r requirements.txt", "cd server && npm install"]
