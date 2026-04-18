@@ -8,7 +8,7 @@ import "./App.css";
 
 const BROADCASTER_URL = import.meta.env.VITE_BROADCASTER_URL || "http://localhost:5000";
 const socket = io(BROADCASTER_URL, {
-  transports: ["websocket", "polling"]
+  transports: ["polling"]  // Force polling — Railway blocks WebSocket upgrades on free tier
 });
 
 // ── Sparkline tooltip ──────────────────────────────────────────────────────────
