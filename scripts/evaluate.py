@@ -94,11 +94,20 @@ def evaluate_system():
                 actual_intruders.add(v["vehicle_id"])
 
     history = {}
+    prev_heading = {}
     print(f"Executing Batch Detection on {len(traces)} frames...")
 
     for t, frame in enumerate(traces):
         for v in frame:
             vid = v["vehicle_id"]
+            
+            # FALSE POSITIVE GUARDS
+            if v["speed"] < 2: continue
+            if vid in prev_heading:
+                if angular_difference(prev_heading[vid], v["heading"]) > 150 and v["speed"] < 5:
+                    continue
+            prev_heading[vid] = v["heading"]
+
             segments = get_nearby_segments(v["lat"], v["lon"], graph)
             score = 0
             for seg in segments:
