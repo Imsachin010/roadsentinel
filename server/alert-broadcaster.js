@@ -7,6 +7,9 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const app = express();
 app.use(cors());
 
+const PORT = process.env.PORT || 5000;
+const ENGINE_URL = process.env.ENGINE_URL || "http://localhost:5001";
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -52,7 +55,7 @@ app.post("/scenario", async (req, res) => {
   const { scenario } = req.body;
   console.log(`🎬 Scenario switch requested: ${scenario}`);
   try {
-    const response = await fetch("http://localhost:5001/scenario", {
+    const response = await fetch(`${ENGINE_URL}/scenario`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ scenario })
@@ -67,6 +70,7 @@ app.post("/scenario", async (req, res) => {
   }
 });
 
-server.listen(5000, () => {
-  console.log("Server running on port 5000");
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Forwarding scenario switches to: ${ENGINE_URL}`);
 });

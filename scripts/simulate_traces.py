@@ -8,10 +8,10 @@ import requests
 # ---------------------------
 # CONFIG
 # ---------------------------
+DATA_PATH = "data/road_graph.json"
+DETECTION_URL = os.getenv("DETECTION_URL", "http://localhost:5001")
 NUM_VEHICLES = 20
 STEP_TIME = 1   # seconds
-
-DETECTION_URL = "http://localhost:5001"
 
 # ---------------------------
 # HELPERS
@@ -34,7 +34,7 @@ def add_noise(val, noise=0.00005):
     return val + random.uniform(-noise, noise)
 
 def load_graph():
-    with open("data/road_graph.json", "r") as f:
+    with open(DATA_PATH, "r") as f:
         return json.load(f)
 
 def get_scenario():

@@ -6,7 +6,8 @@ import { LineChart, Line, Tooltip, ResponsiveContainer } from "recharts";
 import "leaflet/dist/leaflet.css";
 import "./App.css";
 
-const socket = io("http://localhost:5000");
+const BROADCASTER_URL = import.meta.env.VITE_BROADCASTER_URL || "http://localhost:5000";
+const socket = io(BROADCASTER_URL);
 
 // ── Sparkline tooltip ──────────────────────────────────────────────────────────
 const SparkTooltip = ({ active, payload }) => {
@@ -97,7 +98,7 @@ function App() {
   const switchScenario = async (s) => {
     setSwitching(true);
     try {
-      await fetch("http://localhost:5000/scenario", {
+      await fetch(`${BROADCASTER_URL}/scenario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ scenario: s })

@@ -20,9 +20,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# CONFIG
 THRESHOLD = 3.5     # raised: reduces false positives on normal traffic
 NEARBY_RADIUS = 25  # meters
 TEMPORAL_WINDOW = 3
+
+BROADCASTER_URL = os.getenv("BROADCASTER_URL", "http://localhost:5000")
+PORT = int(os.getenv("PORT", 5001))
 
 # GLOBAL STATE
 history = {}
@@ -124,7 +128,7 @@ def send_alert(vehicle, avg_score, road_type, collision_warning=None):
         payload["collision_warning"] = collision_warning
 
     try:
-        requests.post("http://localhost:5000/alert", json=payload)
+        requests.post(f"{BROADCASTER_URL}/alert", json=payload)
     except Exception as e:
         print("Alert send failed:", e)
 
@@ -192,7 +196,7 @@ async def process_stream(request: Request):
 
     # Forward telemetry to broadcasting server
     try:
-        requests.post("http://localhost:5000/telemetry", json=frame)
+        requests.post(f"{BROADCASTER_URL}/telemetry", json=frame)
     except Exception as e:
         pass
 
@@ -200,4 +204,6 @@ async def process_stream(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5001)
+    print(f"🚀 Detection Engine starting on port {PORT}...")
+    print(f"📡 Forwarding alerts to: {BROADCASTER_URL}")
+    uvicorn.run(app, host="0.0.0.0", port=PORT)

@@ -1,10 +1,6 @@
 fastapi
 uvicorn
-osmnx
-networkx
-numpy
-pandas
-shapely
-geopy
-scikit-learn
+requests
+pydantic
 python-multipart
+axios
