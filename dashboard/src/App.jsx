@@ -7,7 +7,9 @@ import "leaflet/dist/leaflet.css";
 import "./App.css";
 
 const BROADCASTER_URL = import.meta.env.VITE_BROADCASTER_URL || "http://localhost:5000";
-const socket = io(BROADCASTER_URL);
+const socket = io(BROADCASTER_URL, {
+  transports: ["websocket", "polling"]
+});
 
 // ── Sparkline tooltip ──────────────────────────────────────────────────────────
 const SparkTooltip = ({ active, payload }) => {

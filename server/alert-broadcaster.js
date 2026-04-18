@@ -6,16 +6,20 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // CRITICAL: Allows receiving telemetry JSON
 
 const PORT = process.env.PORT || 5000;
 const ENGINE_URL = process.env.ENGINE_URL || "http://localhost:5001";
 
 const server = http.createServer(app);
 
+app.get("/health", (req, res) => res.send("OK"));
+
 const io = new Server(server, {
   cors: {
     origin: "*",
   },
+  transports: ["websocket", "polling"]
 });
 
 console.log("🚀 Alert server started...");
